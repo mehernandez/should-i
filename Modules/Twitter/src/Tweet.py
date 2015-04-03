@@ -1,12 +1,11 @@
 class Tweet:
+    def __init__(self, identifier, text, mood):
+        self.identifier = identifier
+        self.text = text
+        self.mood = mood
 
-	def __init__(self, id, text, mood):
-		self.id = id		
-		self.text = text
-		self.mood = mood
+    def __str__(self):
+        return self.get_url
 
-	def __str__(self):
-		return self.getUrl()
-
-	def getUrl(self):
-		return "https://twitter.com/statuses/" + str(self.id)
+    def get_url(self):
+        return 'https://twitter.com/statuses/' + str(self.identifier)
