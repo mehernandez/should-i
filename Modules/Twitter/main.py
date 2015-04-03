@@ -1,12 +1,15 @@
 import json
 import base64
 import io
+import traceback
+from Tweet import Tweet
 from httplib import *
 
 CONSUMER_KEY = None
 PRIVATE_KEY = None
 BEARER_TOKEN = None
 baseURL = "api.twitter.com"
+tweets=[]
 connection = HTTPSConnection(baseURL)
 
 def getToken():
@@ -20,9 +23,8 @@ def getToken():
 		parsed = json.loads(ans)
 		global BEARER_TOKEN
 		BEARER_TOKEN = parsed["access_token"]
-		print("Success")
 	else:
-		print("Failed")
+		print("Failed to authenticate")
 		print(response.read())
 
 
@@ -43,3 +45,24 @@ def deserializeData():
 			BEARER_TOKEN = parsed["BEARER_TOKEN"]
 		except:
 			getToken()
+
+def tweetsMarcaModelo(marca,modelo):
+	query="/1.1/search/tweets.json?q=%40{0}%20{1}%20since%3A2012-01-01&lang=en&count=50".format(marca,modelo)
+	headers = {"Authorization": "Bearer " + BEARER_TOKEN}
+	connection.request("GET",url=query, headers=headers)
+	response = connection.getresponse()
+	if response.status == 200:
+		ans = response.read()
+		parsed = json.loads(ans)
+		parseTweets(parsed)
+	else:
+		print("Failed to search tweets")
+		print(response.read())
+
+def parseTweets(parsed):
+	for t in parsed["statuses"]:
+		tweet = Tweet(t["id"], t["text"], "Positive")
+		tweets.append(tweet)
+
+deserializeData()
+tweetsMarcaModelo('audi','a8')
