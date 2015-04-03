@@ -2,6 +2,7 @@ import json
 import base64
 import io
 from Tweet import Tweet
+from TweetList import TweetList
 from httplib import *
 
 CONSUMER_KEY = None
@@ -9,7 +10,7 @@ PRIVATE_KEY = None
 BEARER_TOKEN = None
 MASHAPE_TOKEN = None
 base_URL = "api.twitter.com"
-tweets = []
+tweets = TweetList()
 connection = HTTPSConnection(base_URL)
 
 
@@ -56,7 +57,8 @@ def deserialize_data():
 
 
 def tweets_marca_modelo(marca, modelo):
-    query = "/1.1/search/tweets.json?q=%40{0}%20{1}%20since%3A2012-01-01&lang=en&count=5&include_entities=false".format(marca, modelo)
+    query = "/1.1/search/tweets.json?q=%40{0}%20{1}%20since%3A2012-01-01&lang=en&include_entities=false"\
+            .format(marca, modelo)
     headers = {"Authorization": "Bearer " + BEARER_TOKEN}
     connection.request("GET", url=query, headers=headers)
     response = connection.getresponse()

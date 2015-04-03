@@ -1,4 +1,7 @@
-class Tweet:
+import difflib
+
+
+class Tweet(object):
     def __init__(self, identifier, text):
         self.identifier = identifier
         self.text = text
@@ -9,3 +12,6 @@ class Tweet:
 
     def __repr__(self):
         return self.__dict__
+
+    def __eq__(self, other):
+        return (self.identifier == other.identifier) or (difflib.SequenceMatcher(None, self.text, other.text).ratio() > 0.7)
