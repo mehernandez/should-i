@@ -1,2 +1,4 @@
-data.json
+data/
 *.pyc
+.idea/
+Twitter.iml

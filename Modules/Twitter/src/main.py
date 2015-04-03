@@ -29,12 +29,12 @@ def getToken():
 
 
 def serializeData():
-	with io.open('data.json', 'w') as f:
+	with io.open('../data/data.json', 'w') as f:
 		jsonFile = {'CONSUMER_KEY':CONSUMER_KEY,'PRIVATE_KEY':PRIVATE_KEY,'BEARER_TOKEN':BEARER_TOKEN}
 		f.write(unicode(json.dumps(jsonFile, ensure_ascii=False)))
 
 def deserializeData():
-	with io.open('data.json', 'r') as f:
+	with io.open('../data/data.json', 'r') as f:
 		parsed = json.loads(f.readline())
 		global CONSUMER_KEY
 		global PRIVATE_KEY
