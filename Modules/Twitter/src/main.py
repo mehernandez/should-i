@@ -73,7 +73,7 @@ def tweets_marca_modelo(marca, modelo):
 
 def parse_tweets(parsed):
     for t in parsed["statuses"]:
-        tweet = Tweet(t["id"], t["text"])
+        tweet = Tweet(t["id"], t["text"], t["user"]["screen_name"], t["created_at"])
         set_mood_for_tweet(tweet)
         tweets.append(tweet)
 

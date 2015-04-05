@@ -1,11 +1,15 @@
 import difflib
+import time
 
 
 class Tweet(object):
-    def __init__(self, identifier, text):
+    def __init__(self, identifier, text, user, date):
         self.identifier = identifier
         self.text = text
         self.url = 'https://twitter.com/statuses/' + str(self.identifier)
+        self.username = "@" + user
+        date_object = time.strptime(date, "%a %b %d %H:%M:%S +0000 %Y")
+        self.date = time.strftime("%B %d, %Y", date_object)
 
     def __str__(self):
         return self.url
