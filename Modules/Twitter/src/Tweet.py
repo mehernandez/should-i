@@ -16,7 +16,7 @@ class Tweet(Respuesta):
         return self.html
 
     def __repr__(self):
-        return self.__dict__
+        return self.url
 
     def __eq__(self, other):
         return (self.identifier == other.identifier) or (difflib.SequenceMatcher(None, self.text, other.text).ratio() > 0.7)

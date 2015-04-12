@@ -57,11 +57,11 @@ class Twitter(Modulo):
             print(response.read())
 
     def pedido(self, perfil=None, tiempo=-1, params=None):
-        return self.tweets_marca_modelo(params["marca"], params["modelo"])
+        return self.tweets_marca_modelo(params["marca"] + " " + params["modelo"])
 
-    def tweets_marca_modelo(self, marca, modelo):
+    def tweets_marca_modelo(self, contenido):
         tweets = TweetList()
-        query = "{0} {1} since:2013-01-01".format(marca, modelo)
+        query = "{0} since:2013-01-01".format(contenido)
         query = "/1.1/search/tweets.json?q=" + urllib.quote(query.encode('utf8')) + "&lang=en&include_entities=false"
         print query
         headers = {"Authorization": "Bearer " + BEARER_TOKEN}
