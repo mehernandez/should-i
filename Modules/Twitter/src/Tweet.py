@@ -1,8 +1,9 @@
 import difflib
 import time
+from Models.Respuesta import Respuesta
 
 
-class Tweet(object):
+class Tweet(Respuesta):
     def __init__(self, identifier, text, user, date):
         self.identifier = identifier
         self.text = text
@@ -12,7 +13,7 @@ class Tweet(object):
         self.date = time.strftime("%B %d, %Y", date_object)
 
     def __str__(self):
-        return self.url
+        return self.html
 
     def __repr__(self):
         return self.__dict__
