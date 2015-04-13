@@ -88,11 +88,15 @@ class Edmunds(Modulo) :
 
             print("Failed")
             print(response.read())
+            return json.dumps({"error": True})
 
 
     def init(self, marca, modelo, anio):
 
         styles = self.consultarStylesEdmunds(marca, modelo, anio)
+
+        if len(styles) == 0 :
+            return json.dumps({"error": True})
 
 
         # Elementos del Json
@@ -139,13 +143,19 @@ class Edmunds(Modulo) :
             if precio < carro.min:
                 carro.min = precio
 
-        carro.promedio = carro.promedio / len(styles)
+        if len(styles) > 0 :
+            carro.promedio = carro.promedio / len(styles)
 
         # Ahora la consulta al API de Fuel Economy
 
         idFuel = self.consultarIdFuelEconomy(marca, modelo, anio)
 
+        if idFuel == "paila" :
+            return json.dumps({"error": True})
+
         carro.score = self.consultarEmisiones(idFuel)
+
+        
 
         print json.dumps(carro.__dict__, indent=4)
 
@@ -184,6 +194,7 @@ class Edmunds(Modulo) :
         else:
             print("Failed")
             print(response.read())
+            return 0
 
     def consultarIdFuelEconomy(self, marca, modelo, anio):
         query = "/ws/rest/vehicle/menu/options?year={2}&make={0}&model={1}" \
@@ -206,6 +217,7 @@ class Edmunds(Modulo) :
         else:
             print("Failed")
             print(response.read())
+            return "paila"
 
 
 
@@ -214,7 +226,7 @@ class Edmunds(Modulo) :
             .format(marca, modelo, anio)
         self.connection.request("GET", url=query)
         response = self.connection.getresponse()
-        if response.status == 200:
+        if response.status == 200 :
             ans = response.read()
             parsed = json.loads(ans)
             #  print json.dumps(parsed, indent=4)
@@ -223,6 +235,8 @@ class Edmunds(Modulo) :
         else:
             print("Failed to search tweets")
             print(response.read())
+            return []
+
 
 
 
@@ -272,5 +286,5 @@ class Edmunds(Modulo) :
 #consultarIdFuelEconomy("audi" , "a4" , "2015")
 
 edmunds = Edmunds()
-#edmunds.init("audi","a4","2015")
-edmunds.obtenerReviews("audi","a4","2014")
+print edmunds.init("audi","bdidew","2015")
+print edmunds.obtenerReviews("audi","a4","no")
