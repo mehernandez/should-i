@@ -2,7 +2,7 @@ __author__ = 'mariohernandez'
 
 class Carro(object):
 
-    automatico = False
+
     manual = False
     promedio = 0
     maxPuertas = 0
@@ -14,9 +14,12 @@ class Carro(object):
     motor = ""
     id = ""
     score = 0
+    automatico = False
 
     def __init__(self):
         self.min = float("inf")
+        self.manual = False
+        self.automatico = False
         pass
 
     def __str__(self):

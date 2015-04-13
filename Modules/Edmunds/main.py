@@ -7,6 +7,8 @@ from httplib import *
 from xml.etree import ElementTree
 from Models.Modulo import *
 from Carro import Carro
+from ReviewCase import ReviewCase
+from Review import Review
 
 class Edmunds(Modulo) :
 
@@ -19,6 +21,7 @@ class Edmunds(Modulo) :
     base_URL2 = "fueleconomy.gov"
     connection2 = HTTPConnection(base_URL2)
     connection3 = HTTPConnection(base_URL2)
+    connection4 = HTTPSConnection(base_URL)    #  Consulta de reviews
 
 
 
@@ -30,6 +33,61 @@ class Edmunds(Modulo) :
 
     def pedido(perfil=None,tiempo=-1,params=None):
         pass
+
+    def obtenerReviews(self, marca, modelo, anio):
+        query = "/api/vehiclereviews/v2/{0}/{1}/{2}?sortby=thumbsUp%3AASC&pagenum=1&pagesize=10&fmt=json&api_key=6zca5s7tcwmd53pjdbn7tqzw" \
+            .format(marca, modelo, anio)
+        print query
+        self.connection4.request("GET", url=query)
+        response = self.connection4.getresponse()
+
+        if response.status == 200:
+
+            reviewCase = ReviewCase()
+
+
+            reviews = []
+
+            ans = response.read()
+            parsed = json.loads(ans)
+
+            reviewCase.ratingPromedio = float(parsed["averageRating"])
+
+            array = parsed["reviews"]
+
+            for r in array :
+                review = Review()
+
+                review.autor = (r["author"])["authorName"]
+                review.titulo = r["title"]
+                review.texto = r["text"]
+                review.sugerencias = r["suggestedImprovements"]
+
+                ratings = r["ratings"]
+
+                review.performanceRating = float((ratings[0])["value"])
+                review.comfortRating = float((ratings[1])["value"])
+                review.fuelEconomyRating = float((ratings[2])["value"])
+                review.funToDriveRating = float((ratings[3])["value"])
+                review.interiorRating = float((ratings[4])["value"])
+                review.exteriorRating = float((ratings[5])["value"])
+                review.buildQualityRating = float((ratings[6])["value"])
+                review.reliabilityRating = float((ratings[7])["value"])
+
+                reviews.insert(reviews.__len__(), review)
+
+
+
+                reviewCase.reviews = reviews
+
+            print json.dumps(reviewCase, default=lambda o: o.__dict__, indent=4)
+
+            return json.dumps(reviewCase, default=lambda o: o.__dict__, indent=4)
+
+        else:
+
+            print("Failed")
+            print(response.read())
 
 
     def init(self, marca, modelo, anio):
@@ -214,4 +272,5 @@ class Edmunds(Modulo) :
 #consultarIdFuelEconomy("audi" , "a4" , "2015")
 
 edmunds = Edmunds()
-edmunds.init("audi","a3","2015")
+#edmunds.init("audi","a4","2015")
+edmunds.obtenerReviews("audi","a4","2014")
